@@ -1,0 +1,429 @@
+ACL Setup in GrSecurity is meant to be as flexible, secure, and easy-to-use
+as possible. If you have any questions after reading this document, feel
+free to e-mail me at michael@linux.com.
+
+1) ACL files
+	a).	Setup
+		There are three ACL files:
+			1). /etc/grsec/proc.acl - use this to set program acls
+			2). /etc/grsec/file.acl - use this to set file acls 
+			3). /etc/grsec/id.acl   - to be done
+	b). Core Concepts
+		1) Agreement
+		Process and File ACLs must(unless overriden by a process ACL)
+		"agree". If you say process y can have rwx access to everything,
+		it still cannot write to write protected file /var/log/messages
+		it can only use the permissions that both it and the file's
+		acl has. So in a manner of speaking it is rather like a 
+		boolean AND of the permissions. Process and File Access Rights
+		must agree. In the terms where a process needs to overstep
+		its bounds and override a file ACL, you can use the override
+		flag, which is detailed below.
+
+		Example
+
+		If the program ACL is 
+
+		/home/michael/foo {
+			/foo/bar rw
+		}
+
+		and the file acl is
+
+		/foo/bar r
+
+		/home/michael/foo will be unable to write to /foo/bar
+		because /foo/bar's file acl allows only read access.
+		/home/michael/foo will still be able to read because both
+		its process ACL and /foo/bar's file acl allow read access.
+	
+	c)      Special Modes
+
+		There are two 'special' modes a user may be in.
+
+		1) Admin Mode
+		Admin mode was created to ease the usability of the ACL system.
+		When in admin mode, you may access any file(read/write/etc.),
+		and view or kill any hidden/protected processes. You have
+		full power. To obtain admin mode, you just type gradm -a
+		and enter your GrSecurity password.
+
+		2) Authentication mode
+		Authentication mode was created for times when you need
+		to doubly authenticate a user. For example, sshd must 
+		be able to execute a shell. The problem is, someone could
+		exploit sshd, and then use its rights to execute a shell
+		to gain root. So you may use authentication mode to 
+		remedy this, by requiring a user that executes a file
+		to authenticate himself to GrSecurity before being allowed
+		to perform any actions. Authentication is performed by typing
+		gradm -u.
+
+		
+2)		ACL Matching
+		ACLs are matched by 'precision'. For example, when trying
+		to find a file or process acl to match /var/log/messages
+		we check ACLs for /var/log/messages, then /var/log,
+		then /var, then /. If you give a directory an ACL, that
+		ACL *will* apply to all of the files(and subdirectories 
+		and their files..ad infinitum) in that directory. This is
+		helpful, however. For example, I usually setup these two
+		file acls:
+
+		/etc r
+		/etc/dhcpcd rw
+
+		Due to /etc containing valuable configuration information,
+		I make it read-only. However, dhcpcd often overwrites its
+		files, so I let /etc/dhcpcd be read-write.  Any file in 
+		/etc/dhcpcd would match the /etc/dhcpcd rule, not the one
+		in /etc. However, /etc/foo would match the /etc rule(assuming
+		there are no other rules for foo). It is recommended that
+		you make a file acl for / since everything that doesn't match
+		a current rule will eventually match the '/' rule.
+
+		If you have no rules for files in /usr/bin, it will check 
+		/usr/bin, then /usr, then /, so having a rule for / is useful
+		if you wish to have restrictive defaults. 
+		
+
+	
+2) Configuration
+	a). 		Process ACLs
+
+			The Easy Way out
+			To produce process ACLs easily use grtrace,
+			which is in the Misc section at grsecurity.net.
+			However, handcrafting ACLs can often result
+			in better and more secure configurations(
+			by utilizing the flags defined in section 3, 
+			and being more tailored to your needs). Skip to 2b
+			if you're using grtrace.
+
+		If you're here I guess you want to hand write your process
+		ACLs, so here we go=)
+		In the file /etc/grsec/proc.acl, acls are setup as follows:
+		<program name> <mode (if any)>{
+			<acl or capability>
+				...
+		}
+
+		<program #2 name> <mode>(if any){
+			<acl or capability>
+			...
+		}
+
+		Program name is the program you wish to configure an acl for.
+		Sample program names include /bin/su, /usr/bin/sshd, and 
+		/bin/login.
+
+		Valid modes are:
+
+		h - program is hidden (ps and other utillities will not show it)
+		
+		p - program is protected(cannot kill it)
+
+		k - program can kill protected processes(see p flag above)
+
+		v - program can view hidden processes(see h flag above)
+
+		For acl or capability, you specify either a capability the
+		program needs or does(+ or - SOME_CAPABILITY). A capability
+		list can be found in README.CAPABILITIES.
+
+		As for the acl part of that, you specify the acls for programs
+		as follows:
+		<file> <mode>
+		Where file is the file the program may access and mode
+		represents the modes it is allowed to access it in.
+
+		Valid modes are:
+
+		r - read access
+		w - write access
+		a - append access
+		x - executable access
+		u - require secondary authentication before access(explained 
+			in section 3a)
+		i - on execution of the file, cause it to inherit this the
+		    acl set of this program(see section 3b)
+	    	f - 'find' the file even if its hidden(see 3c for hidden files)
+		o - override any secondary acls for files/sockets (see 3d)
+		R - require seconary authentication only if program has root
+		    privileges(see section 3e)
+
+		Sample Setups :
+
+		(Beginner)
+		/bin/myprogram {
+			/etc/ld.so.conf r
+			/etc/ld.so.preload r
+			/lib/ld-linux.so.2 r
+			/lib/libc.so.6 r
+			/usr/local/mydata rw
+			/dev/tty rw 
+		}
+		
+		This gives myprogram read-write access to the current terminal,
+		so it can print to the screen and read input, and also can
+		read/write to its data file, /usr/local/mydata. The other
+		files are needed to allow the program to run at all. A
+		shared-linked program must be able to read its libraries.
+		Please note that all executables need at least the following
+		ACLS :
+		/etc/ld.so.conf r (ld needs this for linking)
+		/etc/ld.so.preload r (see above)
+		<all libraries the program is linked with> r
+
+		To find out what libraries a program is linked with, use ldd.
+		So for example, lets see what an absolutely barebones setup
+		would be for /bin/bash on my system.
+
+		bash-2.05$ ldd /bin/bash
+		libtermcap.so.2 => /lib/libtermcap.so.2 (0x00131000)
+		libdl.so.2 => /lib/libdl.so.2 (0x00135000)
+		libc.so.6 => /lib/libc.so.6 (0x00139000)
+		/lib/ld-linux.so.2 => /lib/ld-linux.so.2 (0x00110000)
+		bash-2.05$ 
+
+		Here would be a barebones setup:
+		/bin/bash {
+			/etc/ld.so.conf r
+			/etc/ld.so.preload r
+			/lib/libtermcap.so.2 r
+			/lib/libdl.so.2 r
+			/lib/libc.so.6 r
+			/lib/ld-linux.so.2
+			... (other files, such as data files needed like /usr/local/bash_profile or other files here)
+		}
+
+		Also be sure to use capabilities as well. For example
+		/bin/ping {
+			... (regular acls here)
+			+CAP_SYS_NET_RAW
+			-CAP_SYS_SETUID
+			-CAP_SYS_RAWIO
+			-CAP_SYS_MODULE
+		}
+		This gives ping the CAP_SYS_NET_RAW capability but denies
+		it the CAP_SYS_SETUID, CAP_SYS_RAWIO, and CAP_SYS_MODULE
+		capabilities that it does not need.
+
+		Also, as an example of program modes, here is a sample IDS 
+		setup:
+
+		/usr/bin/snort hp {
+			/etc/ld.so.conf r
+			/etc/ld.so.preload r
+			... (snort libararies and data files here)
+		}
+
+		This would, when filled in, prevent snort from being
+		seen via 'ps', 'top', or any other such utility, and
+		would also prevent it from being kill'd. This would allow
+		snort to run undetected(assuming you hid its log files as 
+		well) as long as your system was running. 		
+
+		
+
+		There will be more advanced ACL setups listed in Section 3.
+
+
+
+	b).		File ACLs	
+
+		Compared to Process ACLs, file acls are much simpler.
+		File ACLs are declared as :
+		<file> <modes allowed>
+
+		Where file is a file or directory and mode are the modes
+		any program is allowed to access it with. It works
+		with programs that do and do not have process acls.  The
+		ONLY way to bypass a file acl is to use the override
+		process acl flag described in section 3d.
+
+		Valid modes are:
+
+		r - programs can read this file
+		w - programs can write to this file
+		a - programs can append to this file
+		x - programs can execute this file
+		h - file is hidden. it can only be seen by programs you specify
+			(see section 3c)
+
+		So for a practical example, I always have this acl:
+		/var/log ar
+		So that people can only append or read my log messages.
+		If my system is compromised no one can delete or truncate
+		my logs. Some programs may need to write, such as log-pruning
+		programs, so they will need ACLs setup that allow them
+		to override this file acl(see 3d). 
+
+		File ACL Matching:
+
+		File ACLs are matched by most specific first. Example:
+
+		/home/michael/mystuff/mydata rw
+		/home/michael/mystuff r
+		/home/michael rw
+
+		An attempt to acces /home/michael/mystuff/mydata will match
+		the first acl. An attempt to access /home/michael/mystuff/other
+		will match the second acl(for the directory mystuff)
+		Attempting to access anything slse in /home/michael(assuming
+		there are no other /home/michael acls), such as
+		/home/michael/linux/README, will match the /home/michael acl.
+		You should define a file acl for / first. That way, if 
+		a file attempt doesn't match anything else, it at least
+		matches the / acl, since everything is a subidrectory of /.
+
+		If GrSecurity cannot find a file or process acl for an
+		access attempt, it will allow in the end, assuming a user
+		misconfiguration(besides, setting / to anything but rwx
+		would make your life very hard). You should set / to something
+		if you do not want the default file acl to be treated as rwx.
+
+		I'm sorry if this is rather obtuse(if you understand this
+		and have a better way to explain it please contact me). Here
+		is a concrete example:
+
+		/ rwx
+		/home rw
+		/var/log ar
+		/bin rx
+		/sbin rx
+
+		Attempting to acess /foo/bar would match the '/ rwx' acl, since
+		it matches none of the others. However, attemping to access
+		/home/blackhat/exploit would match '/home rw', and assuming
+		you were trying to execute it, that execution would
+		result in failure since only read and write are allowed in files
+		in /home. It is often a good idea to make /home and /tmp rw, 
+		unless your users should be compiling programs. (And then
+		gives those users their own file acls, like /home/developer rwx, 		and leave /home rw intact).
+
+		For a more advanced setup see Section 3.
+
+		
+	c).		UID/GID ACLs
+		These are not currently implemented. Wait for the next
+		release :)
+
+3. Advanced features of process ACLs and advanced file/process ACL setups		
+	a). Authentication
+
+
+	It is sometimes necessary to allow a program access to a 'dangerous'
+	file because some non-root users and root-users may need it. To
+	protect a file further, we can set it to require authentication.
+	For example, in sshd, we can't not allow ssh to execute a shell,
+	because no user would be able to log in. If you truly wanted to 
+	program a wrapper program that would be possible, but tedious.
+	In the interest of making the administrator's job easier, authentication
+	mode was created.
+
+	When a file is accessed that requires authentication, the user
+	is trapped in a 'jail'. This jail is simply a restrictive process
+	ACL, giving the user access only to the current tty and gradm,
+	which is the administration program that they can use to authentication
+	themselves. Here is an example of authentication in work:
+
+	
+	
+	The authentication flags are 
+	'a' : authentication required always
+	'R' : authentication required only if root
+
+	so to stop someone from spawning a rootshell in /bin/su we could do
+
+	/bin/su {
+		<libraries> r
+		...
+		/bin/bash Rx
+		/bin/csh Rx
+		<all other shells you want su to use> Rx
+	}
+        
+
+
+	
+
+
+	b). Inheritance
+
+	There are times when a program must execute something, perhaps a
+	parser, but you want that parser to be as restricted as its parent.
+	Perhaps when apache executes /usr/bin/perl. Howevr, you don't want
+	the perl executable to have freer reign than its parent
+        (restricted by the file acls), you want it to be as restricted
+	as its parent, and thus inherit its parents acl.
+
+	c). Hidden Files
+
+	There are certain files that you not only do not want an attacker
+	to gain access to, but you would rather hide altogether. Perhaps
+	IDS logs, or /etc/shadow. To hide these files, you use a file acl
+
+	<file or directory name> h<any other modes>
+
+	a file that is hrw can be read/written to, but only by something
+	that is allowed to find it.
+
+	For example, lets say you wish to hide /etc/shadow(file) and
+	/etc/grsec(directory), both of which are rather good ideas.
+
+	In your file.acl you would place the lines
+	/etc/grsec h
+	/etc/shadow h
+
+	Now for a program to access it, it needs the 'find' flag set for that
+	file. So, for example, /bin/su needs to read /etc/shadow. Somewhere
+	in your /bin/su program ACL you would have...
+
+	/bin/su {
+		...
+		/etc/shadow fro
+	}
+	
+	This allows /bin/su to (f)ind the file /etc/shadow and thanks
+	to the override flag it can read it as well.  For more on overrides,
+	see the next section.
+	
+
+	d). Overrides
+
+	Occaisionally, your file ACLs may restrict both yourself and an attacker.
+	Its great to have append only logs, but what about when you have to 
+	clean up a 15 meg /var/log/messages? In times like this, you may wish
+	to keep GrSecurity's ACL system on, but at the same time be able to
+	override the file ACL in place. To do this, you may do one of two
+	things.  You may setup a program ACL with an 'o' in its capability
+	list for that file. For example:
+
+	/home/michael/test2 {
+		/home/michael/unwriteable rwo
+	}
+
+	if /home/michael/unwriteable has the file acl 
+	/home/michael/unwritable r
+	then test2 will still be able to write to it because of the (o)verride
+	flag present, which causes file acls to be ignored for that particular
+	file.  
+
+	e). Advanced ACL Setups
+
+
+
+
+4. Thank yous / Contact
+I would like to thank all of the beta testers(see CREDITS file), as well
+as Brad Spengler for creating and leading the GrSecurity project. If you
+have any suggestions or questions after reading this document please
+mail michael@linux.com. I apologize for any problems or ambiguities, it is
+my first attempt at a good set of documentation, and this topic is not exactly
+trivial.  I hope this FAQ helped answer your questions:)
+
+
+		
+		
+
