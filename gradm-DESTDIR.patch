@@ -11,7 +11,7 @@ diff -Nur gradm-1.1c/Makefile.in gradm-1.1c-new/Makefile.in
 -	$(sbindir)/gradm -P
 -	$(INSTALL) -m 0444 -o root -g root gradm.8 $(installman)
 +	$(INSTALL) gradm $(DESTDIR)$(sbindir)
-+	$(SHELL) ./mkinstalldirs $(mandir) $(installman) $(DESTDIR)$(grdir)
++	$(SHELL) ./mkinstalldirs $(DESTDIR)$(mandir) $(DESTDIR)$(installman) $(DESTDIR)$(grdir)
  
  include/buildstamp.h:
  	echo \#define GR_BUILD_STAMP \"`date`\" > include/buildstamp.h
