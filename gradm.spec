@@ -1,18 +1,25 @@
 #
+# TODO: - add Provides: ...(grsecurity) in the kernel.spec /LINUX_2_6 should
+#	  provide grsecurity/ and uncomment the Reqs & BRs 
+#	- Test, test & test
+#
 # Conditional build:
 %bcond_without	dist_kernel	# without kernel from distribution 
 %bcond_without	static		# build static version
 #
-%define 	grsec_version	2.0
+%define 	grsec_version	2.1.1
+%define		_snap		200501141323
+%define		_rel		1
 Summary:	GrSecurity ACL Administration
 Summary(pl):	Administracja ACL GrSecurity
 Name:		gradm
-Version:	2.0.1
-Release:	1
+Version:	%{grsec_version}
+Release:	%{_snap}.%{_rel}
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.grsecurity.net/%{name}-%{version}.tar.gz
-# Source0-md5:	3f4d8d524a55e35a7d06166f4f51f299
+Source0:	http://www.grsecurity.net/~spender/%{name}-%{version}-%{_snap}.tar.gz
+# Source0-md5:	3bbf9ec971fb865c0da091f38550982e
+# Source0:	http://www.grsecurity.net/%{name}-%{version}.tar.gz
 Source1:	http://www.grsecurity.net/gracldoc.htm
 # Source1-md5:	010802958eaed78e4c370f4f5ce142b5
 URL:		http://www.grsecurity.net/
@@ -21,8 +28,8 @@ BuildRequires:	flex
 %{?with_static:BuildRequires:	glibc-static}
 %{!?with_static:BuildRequires:	sed > 4.0}
 BuildRequires:	texinfo
-%{?with_dist_kernel:BuildRequires:	kernel-headers(grsecurity) = %{grsec_version}}
-%{?with_dist_kernel:Requires:	kernel(grsecurity) > 1.9.8}
+#%{?with_dist_kernel:BuildRequires:	kernel-headers(grsecurity) = %{grsec_version}}
+#%{?with_dist_kernel:Requires:	kernel(grsecurity) > 1.9.8}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
@@ -39,10 +46,11 @@ cp -f %{SOURCE1} .
 
 %build
 %{!?with_static:sed -i 's/LDFLAGS=-static/LDFLAGS=/' Makefile}
+echo "%{rpmcflags}" > /tmp/flags
 %{__make} \
 	CC=%{__cc} \
 	YACC=/usr/bin/bison \
-	CFLAGS="%{rpmcflags}"
+	CFLAGS="%{rpmcflags} -DGRSEC_DIR=\\\"/etc/grsec\\\" -DKERNVER=6"
 
 %install
 rm -rf $RPM_BUILD_ROOT
