@@ -1,4 +1,4 @@
-%define 	grsec_version	2.0-rc2
+%define 	grsec_version	2.0-rc3
 Summary:	GrSecurity ACL Administration
 Summary(pl):	Administracja ACL GrSecurity
 Name:		gradm
@@ -7,7 +7,7 @@ Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.grsecurity.net/%{name}-%{grsec_version}.tar.gz
-# Source0-md5:	e55f69530d3d6337319d045fcab9503c
+# Source0-md5:	9758bd7407b034bf464c72c9aef27bad
 Source1:	http://www.grsecurity.net/gracldoc.htm
 # Source1-md5:	010802958eaed78e4c370f4f5ce142b5
 URL:		http://www.grsecurity.net/
