@@ -1,3 +1,6 @@
+#
+# Conditional build:
+%bcond_without	dist_kernel	# without kernel from distribution 
 %define 	grsec_version	2.0-rc3
 Summary:	GrSecurity ACL Administration
 Summary(pl):	Administracja ACL GrSecurity
@@ -15,8 +18,8 @@ BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	glibc-static
 BuildRequires:	texinfo
-%{!?_without_dist_kernel:BuildRequires:	kernel-headers(grsecurity) = %{grsec_version}}
-%{!?_without_dist_kernel:Requires:	kernel(grsecurity) > 1.9.8}
+%{?with_dist_kernel:BuildRequires:	kernel-headers(grsecurity) = %{grsec_version}}
+%{?with_dist_kernel:Requires:	kernel(grsecurity) > 1.9.8}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
