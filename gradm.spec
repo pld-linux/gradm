@@ -5,10 +5,6 @@ Version:	1.1c
 Release:	1
 License:	GPL
 Group:		Applications/System
-Group(de):	Applikationen/System
-Group(es):	Aplicaciones/Sistema
-Group(pl):	Aplikacje/System
-Group(pt_BR):	Aplicações/Sistema
 Source0:	http://www.grsecurity.net/%{name}-%{version}.tar.gz
 Source1:	http://www.grsecurity.net/obvdoc.tar.gz
 Patch0:		%{name}-DESTDIR.patch
