@@ -2,12 +2,13 @@ Summary:	GrSecurity ACL Administration
 Summary(pl):	Administracja ACL GrSecurity
 Name:		gradm
 Version:	1.2.1
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.grsecurity.net/%{name}-%{version}.tar.gz
 Source1:	http://www.grsecurity.net/obvdoc.tar.gz
-Source2:	http://www.grsecurity.net/README.ACL
+# http://www.grsecurity.net/README.ACL
+Source2:	%{name}-README.ACL
 Patch0:		%{name}-DESTDIR.patch
 URL:		http://www.grsecurity.net/
 BuildRequires:	autoconf
