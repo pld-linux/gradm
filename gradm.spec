@@ -1,6 +1,6 @@
 #
 # TODO: - add Provides: ...(grsecurity) in the kernel.spec /LINUX_2_6 should
-#	  provide grsecurity/ and uncomment the Reqs & BRs 
+#	  provide grsecurity/ and uncomment the Reqs
 #	- Test, test & test
 #
 # Conditional build:
@@ -28,7 +28,6 @@ BuildRequires:	flex
 %{?with_static:BuildRequires:	glibc-static}
 %{!?with_static:BuildRequires:	sed > 4.0}
 BuildRequires:	texinfo
-#%{?with_dist_kernel:BuildRequires:	kernel-headers(grsecurity) = %{grsec_version}}
 #%{?with_dist_kernel:Requires:	kernel(grsecurity) > 1.9.8}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
