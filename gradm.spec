@@ -3,16 +3,16 @@
 %bcond_without	dist_kernel	# without kernel from distribution 
 %bcond_without	static		# build static version
 #
-%define 	grsec_version	2.0-rc3
+%define 	grsec_version	2.0
 Summary:	GrSecurity ACL Administration
 Summary(pl):	Administracja ACL GrSecurity
 Name:		gradm
 Version:	2.0
-Release:	1
+Release:	2
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.grsecurity.net/%{name}-%{grsec_version}.tar.gz
-# Source0-md5:	9758bd7407b034bf464c72c9aef27bad
+# Source0-md5:	4b1c99ec6ea415fcc75ac1b89edc90f0
 Source1:	http://www.grsecurity.net/gracldoc.htm
 # Source1-md5:	010802958eaed78e4c370f4f5ce142b5
 Patch0:		%{name}-elfutils.patch
