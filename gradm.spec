@@ -1,21 +1,22 @@
+%define 	grsec_version	2.0-pre4
 Summary:	GrSecurity ACL Administration
 Summary(pl):	Administracja ACL GrSecurity
 Name:		gradm
-Version:	1.7b
+Version:	2.0
 Release:	1
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.grsecurity.net/%{name}-%{version}.tar.gz
-# Source0-md5:	31d6516a43128fdcfcb977f4e9d461c2
-Source1:	http://www.grsecurity.net/gracldoc.htm
+# Source0-md5:	d26cfdf1d7c6d3d6403aa40194105606
+Source0:	http://www.grsecurity.net/%{name}-%{grsec_version}.tar.gz
 # Source1-md5:	010802958eaed78e4c370f4f5ce142b5
+Source1:	http://www.grsecurity.net/gracldoc.htm
 URL:		http://www.grsecurity.net/
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	glibc-static
 BuildRequires:  texinfo
-%{!?_without_dist_kernel:BuildRequires:	kernel(grsecurity) > 1.9.8}
-%{!?_without_dist_kernel:BuildRequires:	kernel-headers >= 2.4}
+%{!?_without_dist_kernel:BuildRequires:	kernel-headers(grsecurity) = %{grsec_version}}
+%{!?_without_dist_kernel:Requires:	kernel(grsecurity) > 1.9.8}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
@@ -27,7 +28,7 @@ GrSecurity ACL Administration.
 Administracja ACL GrSecurity.
 
 %prep
-%setup -q -n %{name}
+%setup -q -n %{name}2
 
 cp -f %{SOURCE1} .
 
