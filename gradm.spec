@@ -14,7 +14,7 @@ URL:		http://www.grsecurity.net/
 BuildRequires:	bison
 BuildRequires:	flex
 BuildRequires:	glibc-static
-BuildRequires:  texinfo
+BuildRequires:	texinfo
 %{!?_without_dist_kernel:BuildRequires:	kernel-headers(grsecurity) = %{grsec_version}}
 %{!?_without_dist_kernel:Requires:	kernel(grsecurity) > 1.9.8}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
