@@ -1,7 +1,7 @@
 Summary:	GrSecurity ACL Administration
 Summary(pl):	Administracja ACL GrSecurity
 Name:		gradm
-Version:	1.5a
+Version:	1.7b
 Release:	1
 License:	GPL
 Group:		Applications/System
