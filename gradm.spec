@@ -1,14 +1,16 @@
 Summary:	GrSecurity ACL Administration
 Summary(pl):	Administracja ACL GrSecurity
 Name:		gradm
-Version:	1.1c
+Version:	1.2.1
 Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.grsecurity.net/%{name}-%{version}.tar.gz
 Source1:	http://www.grsecurity.net/obvdoc.tar.gz
+Source2:	http://www.grsecurity.net/README.ACL
 Patch0:		%{name}-DESTDIR.patch
 URL:		http://www.grsecurity.net/
+BuildRequires:	autoconf
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
@@ -24,6 +26,8 @@ Administracja ACL GrSecurity.
 %patch -p1
 
 %build
+aclocal
+autoconf
 %configure
 
 %{__make}
@@ -36,8 +40,9 @@ install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8}
 	DESTDIR=$RPM_BUILD_ROOT
 
 install gradm.8 $RPM_BUILD_ROOT%{_mandir}/man8
+install %{SOURCE2} .
 
-gzip -9nf ChangeLog config/README config/Setup
+gzip -9nf ChangeLog config/README config/Setup README.ACL
 
 %clean
 rm -rf $RPM_BUILD_ROOT
