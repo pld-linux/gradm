@@ -12,6 +12,7 @@ Source2:	%{name}-README.ACL
 Patch0:		%{name}-DESTDIR.patch
 URL:		http://www.grsecurity.net/
 BuildRequires:	autoconf
+BuildRequires:	automake
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
@@ -27,7 +28,7 @@ Administracja ACL GrSecurity.
 %patch -p1
 
 %build
-aclocal
+%{__aclocal}
 %{__autoconf}
 %configure
 
