@@ -6,7 +6,9 @@ Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.grsecurity.net/%{name}-%{version}.tar.gz
+# Source0-md5:	31d6516a43128fdcfcb977f4e9d461c2
 Source1:	http://www.grsecurity.net/gracldoc.htm
+# Source1-md5:	010802958eaed78e4c370f4f5ce142b5
 URL:		http://www.grsecurity.net/
 BuildRequires:	bison
 BuildRequires:	flex
