@@ -1,0 +1,24 @@
+--- gradm2/gradm.h.orig	2003-08-07 20:01:37.000000000 +0200
++++ gradm2/gradm.h	2004-04-16 11:15:46.918039888 +0200
+@@ -24,7 +24,10 @@
+ #include <sys/resource.h>
+ #include <sys/mman.h>
+ #include <asm/posix_types.h>
++#include <linux/user.h>
+ #include <linux/elf.h>
++#include <linux/fs.h>
++#include <linux/kdev_t.h>
+ #include <linux/capability.h>
+ #include <linux/threads.h>
+ 
+--- gradm2/gradm_adm.c.orig	2003-07-10 20:06:59.000000000 +0200
++++ gradm2/gradm_adm.c	2004-04-16 10:59:16.000000000 +0200
+@@ -3,7 +3,7 @@
+ int
+ is_valid_elf_binary(const char *filename)
+ {
+-	struct elf32_hdr header_elf;
++	Elf32_Ehdr header_elf;
+ 	int fd;
+ 
+ 	if ((fd = open(filename, O_RDONLY)) < 0)
