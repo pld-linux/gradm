@@ -11,7 +11,7 @@ Version:	2.0
 Release:	2
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.grsecurity.net/%{name}-%{grsec_version}.tar.gz
+Source0:	http://www.grsecurity.net/%{name}-%{version}.tar.gz
 # Source0-md5:	4b1c99ec6ea415fcc75ac1b89edc90f0
 Source1:	http://www.grsecurity.net/gracldoc.htm
 # Source1-md5:	010802958eaed78e4c370f4f5ce142b5
