@@ -15,7 +15,6 @@ Source0:	http://www.grsecurity.net/%{name}-%{version}.tar.gz
 # Source0-md5:	3f4d8d524a55e35a7d06166f4f51f299
 Source1:	http://www.grsecurity.net/gracldoc.htm
 # Source1-md5:	010802958eaed78e4c370f4f5ce142b5
-Patch0:		%{name}-elfutils.patch
 URL:		http://www.grsecurity.net/
 BuildRequires:	bison
 BuildRequires:	flex
@@ -36,7 +35,6 @@ Administracja ACL GrSecurity.
 
 %prep
 %setup -q -n %{name}2
-#%patch0 -p1
 cp -f %{SOURCE1} .
 
 %build
