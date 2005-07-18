@@ -1,14 +1,13 @@
 #
 # TODO: - add Provides: ...(grsecurity) in the kernel.spec /LINUX_2_6 should
 #	  provide grsecurity/ and uncomment the Reqs
-#	- Test, test & test
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without kernel from distribution 
 %bcond_without	static		# build static version
 #
-%define 	grsec_version	2.1.1
-%define		_snap		200501141323
+%define 	grsec_version	2.1.5
+%define		_snap		200504081812
 %define		_rel		1
 Summary:	GrSecurity ACL Administration
 Summary(pl):	Administracja ACL GrSecurity
@@ -17,8 +16,8 @@ Version:	%{grsec_version}
 Release:	%{_snap}.%{_rel}
 License:	GPL
 Group:		Applications/System
-Source0:	http://www.grsecurity.net/~spender/%{name}-%{version}-%{_snap}.tar.gz
-# Source0-md5:	3bbf9ec971fb865c0da091f38550982e
+Source0:	http://www.grsecurity.net/%{name}-%{version}-%{_snap}.tar.gz
+# Source0-md5:	7f5b49452db785eb590a167c9da3d319
 # Source0:	http://www.grsecurity.net/%{name}-%{version}.tar.gz
 Source1:	http://www.grsecurity.net/gracldoc.htm
 # Source1-md5:	010802958eaed78e4c370f4f5ce142b5
@@ -59,6 +58,7 @@ install gradm $RPM_BUILD_ROOT%{_sbindir}
 install grlearn $RPM_BUILD_ROOT%{_sbindir}
 install gradm.8 $RPM_BUILD_ROOT%{_mandir}/man8
 install policy $RPM_BUILD_ROOT%{_sysconfdir}/grsec
+install learn_config $RPM_BUILD_ROOT%{_sysconfdir}/grsec
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -68,5 +68,6 @@ rm -rf $RPM_BUILD_ROOT
 %doc gracldoc.htm
 %attr(755,root,root) %{_sbindir}/*
 %dir %{_sysconfdir}/grsec
-%attr(600,root,root) %config(noreplace) %verify(not size mtime md5) %{_sysconfdir}/grsec/policy
+%attr(600,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/grsec/policy
+%attr(600,root,root) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/grsec/learn_config
 %{_mandir}/man8/*
