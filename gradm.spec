@@ -44,7 +44,6 @@ cp -f %{SOURCE1} .
 
 %build
 %{!?with_static:sed -i 's/LDFLAGS=-static/LDFLAGS=/' Makefile}
-echo "%{rpmcflags}" > /tmp/flags
 %{__make} \
 	CC=%{__cc} \
 	YACC=/usr/bin/bison \
