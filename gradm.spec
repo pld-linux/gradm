@@ -4,7 +4,7 @@
 #
 # Conditional build:
 %bcond_without	dist_kernel	# without kernel from distribution 
-%bcond_without	static		# build static version
+%bcond_with	static		# build static version
 #
 %define 	grsec_version	2.1.6
 %define		_snap		200506131347
@@ -24,8 +24,12 @@ Source1:	http://www.grsecurity.net/gracldoc.htm
 URL:		http://www.grsecurity.net/
 BuildRequires:	bison
 BuildRequires:	flex
-%{?with_static:BuildRequires:	glibc-static}
-%{!?with_static:BuildRequires:	sed > 4.0}
+%if %{with static}
+BuildRequires:	glibc-static
+BuildRequires:	pam-static
+BuildRequires:	sed > 4.0
+%endif
+BuildRequires:	pam-devel
 BuildRequires:	texinfo
 #%{?with_dist_kernel:Requires:	kernel(grsecurity) > 1.9.8}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -43,17 +47,18 @@ Administracja ACL GrSecurity.
 cp -f %{SOURCE1} .
 
 %build
-%{!?with_static:sed -i 's/LDFLAGS=-static/LDFLAGS=/' Makefile}
+%{?with_static:sed -i 's/LDFLAGS=/LDFLAGS=-static -ldl/' Makefile}
 %{__make} \
 	CC=%{__cc} \
 	YACC=/usr/bin/bison \
-	CFLAGS="%{rpmcflags} -DGRSEC_DIR=\\\"/etc/grsec\\\" -DKERNVER=6"
+	CFLAGS="%{rpmcflags} -DGRSEC_DIR=\\\"/etc/grsec\\\""
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT{%{_sbindir},%{_mandir}/man8,%{_sysconfdir}/grsec}
 
 install gradm $RPM_BUILD_ROOT%{_sbindir}
+install gradm_pam $RPM_BUILD_ROOT%{_sbindir}
 install grlearn $RPM_BUILD_ROOT%{_sbindir}
 install gradm.8 $RPM_BUILD_ROOT%{_mandir}/man8
 install policy $RPM_BUILD_ROOT%{_sysconfdir}/grsec
