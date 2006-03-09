@@ -49,7 +49,7 @@ cp -f %{SOURCE1} .
 %build
 %{?with_static:sed -i 's/LDFLAGS=/LDFLAGS=-static -ldl/' Makefile}
 %{__make} \
-	CC=%{__cc} \
+	CC="%{__cc}" \
 	YACC=/usr/bin/bison \
 	CFLAGS="%{rpmcflags} -DGRSEC_DIR=\\\"/etc/grsec\\\""
 
