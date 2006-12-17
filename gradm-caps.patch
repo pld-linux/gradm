@@ -1,0 +1,23 @@
+--- gradm-svn/gradm_cap.c	2006-12-17 13:51:48.772510000 +0100
++++ gradm-svn/gradm_cap.c.	2006-12-17 02:52:19.474597750 +0100
+@@ -30,6 +30,9 @@
+ 	{"CAP_SYS_TTY_CONFIG", 26},
+ 	{"CAP_MKNOD", 27},
+ 	{"CAP_LEASE", 28},
++	{"CAP_AUDIT_WRITE", 29},
++	{"CAP_AUDIT_CONTROL", 30},
++	{"CAP_CONTEXT", 31},
+ 	{"CAP_ALL", ~0}
+ };
+ 
+--- gradm-svn/gradm_defs.h~	2006-12-13 01:08:30.356024500 +0100
++++ gradm-svn/gradm_defs.h	2006-12-17 14:00:14.660126000 +0100
+@@ -414,7 +414,7 @@ struct gr_arg_wrapper {
+ };
+ 
+ char *rlim_table[GR_NLIMITS];
+-struct capability_set capability_list[30];
++struct capability_set capability_list[33];
+ struct paxflag_set paxflag_list[5];
+ 
+ int is_24_kernel;
