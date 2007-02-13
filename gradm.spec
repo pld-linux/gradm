@@ -10,7 +10,7 @@
 %define		_snap		200610091102
 %define		_rel		1
 Summary:	GrSecurity ACL Administration
-Summary(pl.UTF-8):   Administracja ACL GrSecurity
+Summary(pl.UTF-8):	Administracja ACL GrSecurity
 Name:		gradm
 Version:	%{grsec_version}
 Release:	%{_snap}.%{_rel}
