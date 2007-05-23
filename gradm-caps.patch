@@ -15,9 +15,9 @@
 @@ -414,7 +414,7 @@ struct gr_arg_wrapper {
  };
  
- char *rlim_table[GR_NLIMITS];
--struct capability_set capability_list[30];
-+struct capability_set capability_list[33];
- struct paxflag_set paxflag_list[5];
+ extern char *rlim_table[GR_NLIMITS];
+-extern struct capability_set capability_list[30];
++extern struct capability_set capability_list[33];
+ extern struct paxflag_set paxflag_list[5];
  
- int is_24_kernel;
+ extern int is_24_kernel;
