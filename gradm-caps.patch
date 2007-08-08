@@ -1,11 +1,9 @@
 --- gradm-svn/gradm_cap.c	2006-12-17 13:51:48.772510000 +0100
 +++ gradm-svn/gradm_cap.c.	2006-12-17 02:52:19.474597750 +0100
-@@ -30,6 +30,9 @@
- 	{"CAP_SYS_TTY_CONFIG", 26},
- 	{"CAP_MKNOD", 27},
+@@ -30,6 +30,7 @@
  	{"CAP_LEASE", 28},
-+	{"CAP_AUDIT_WRITE", 29},
-+	{"CAP_AUDIT_CONTROL", 30},
+ 	{"CAP_AUDIT_WRITE", 29},
+ 	{"CAP_AUDIT_CONTROL", 30},
 +	{"CAP_CONTEXT", 31},
  	{"CAP_ALL", ~0}
  };
@@ -16,7 +14,7 @@
  };
  
  extern char *rlim_table[GR_NLIMITS];
--extern struct capability_set capability_list[30];
+-extern struct capability_set capability_list[32];
 +extern struct capability_set capability_list[33];
  extern struct paxflag_set paxflag_list[5];
  
