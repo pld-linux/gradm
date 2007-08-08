@@ -6,8 +6,8 @@
 %bcond_without	dist_kernel	# without kernel from distribution 
 %bcond_with	static		# build static version
 #
-%define 	grsec_version	2.1.10
-%define		_snap		200702231759
+%define 	grsec_version	2.1.11
+%define		_snap		200708011700
 %define		_rel		1
 Summary:	GrSecurity ACL Administration
 Summary(pl.UTF-8):	Administracja ACL GrSecurity
@@ -17,7 +17,7 @@ Release:	%{_snap}.%{_rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.grsecurity.net/~spender/%{name}-%{version}-%{_snap}.tar.gz
-# Source0-md5:	73c2fc91143012d76d7ef99aaa5804ee
+# Source0-md5:	df1966f0e871014fa75c98b048e78b92
 #Source0:	http://www.grsecurity.net/%{name}-%{version}-%{_snap}.tar.gz
 Source1:	http://www.grsecurity.net/gracldoc.htm
 # Source1-md5:	010802958eaed78e4c370f4f5ce142b5
