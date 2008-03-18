@@ -7,7 +7,7 @@
 %bcond_with	static		# build static version
 #
 %define 	grsec_version	2.1.11
-%define		_snap		200708011700
+%define		_snap		200803171746
 %define		_rel		1
 Summary:	GrSecurity ACL Administration
 Summary(pl.UTF-8):	Administracja ACL GrSecurity
@@ -17,7 +17,7 @@ Release:	%{_snap}.%{_rel}
 License:	GPL
 Group:		Applications/System
 Source0:	http://www.grsecurity.net/~spender/%{name}-%{version}-%{_snap}.tar.gz
-# Source0-md5:	df1966f0e871014fa75c98b048e78b92
+# Source0-md5:	5ded65a66d3b3d85cc510d7ff7d5e616
 #Source0:	http://www.grsecurity.net/%{name}-%{version}-%{_snap}.tar.gz
 Source1:	http://www.grsecurity.net/gracldoc.htm
 # Source1-md5:	010802958eaed78e4c370f4f5ce142b5
@@ -53,7 +53,7 @@ cp -f %{SOURCE1} .
 %{__make} \
 	CC="%{__cc}" \
 	YACC=/usr/bin/bison \
-	CFLAGS="%{rpmcflags} -DGRSEC_DIR=\\\"/etc/grsec\\\""
+	OPT_FLAGS="%{rpmcflags}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
