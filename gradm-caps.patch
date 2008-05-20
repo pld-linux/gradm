@@ -1,10 +1,10 @@
---- gradm2/gradm_cap.c.orig	2008-04-15 02:54:53.000000000 +0200
-+++ gradm2/gradm_cap.c	2008-04-16 19:53:31.456174403 +0200
-@@ -33,6 +33,7 @@
- 	{"CAP_AUDIT_WRITE", 29},
- 	{"CAP_AUDIT_CONTROL", 30},
+--- gradm2/gradm_cap.c~	2008-05-20 18:48:36.400917277 +0000
++++ gradm2/gradm_cap.c	2008-05-20 18:53:16.381674649 +0000
+@@ -35,6 +35,7 @@ struct capability_set capability_list[] 
  	{"CAP_SETFCAP", 31},
-+	{"CAP_CONTEXT", 31},
+ 	{"CAP_MAC_OVERRIDE", 32},
+ 	{"CAP_MAC_ADMIN", 33},
++	{"CAP_CONTEXT", 34},
  	{"CAP_ALL", ~0}
  };
  
@@ -14,8 +14,8 @@
  };
  
  extern char *rlim_table[GR_NLIMITS];
--extern struct capability_set capability_list[33];
-+extern struct capability_set capability_list[34];
+-extern struct capability_set capability_list[35];
++extern struct capability_set capability_list[36];
  extern struct paxflag_set paxflag_list[5];
  
  extern int is_24_kernel;
