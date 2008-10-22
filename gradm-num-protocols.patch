@@ -1,0 +1,47 @@
+support for numeric protocols values
+--- gradm2/gradm.l	(wersja 285)
++++ gradm2/gradm.l	(wersja 286)
+@@ -158,7 +158,7 @@
+ 					  gradmlval.string = gr_strdup(yytext);
+ 					  return IPTYPE;
+ 					}
+-<IP_STATE>[a-z_-]+			{
++<IP_STATE>[a-z0-9]+[a-z0-9_+-.]*	{
+ 					  gradmlval.string = gr_strdup(yytext);
+ 					  return IPPROTO;
+ 					}
+--- gradm2/gradm_net.c	(wersja 285)
++++ gradm2/gradm_net.c	(wersja 303)
+@@ -147,6 +147,21 @@
+ {
+ 	struct protoent *proto;
+ 	unsigned short i;
++	unsigned short num_proto, ret=0;
++	
++	if (strlen(name) <= 3) {
++		ret = 1;
++		for (i = 0; i < strlen(name) - 1; i++)
++			if (!isdigit(name[i]))
++				ret=0;
++		if (ret) {
++			num_proto = atoi(name);
++			if (num_proto<256)
++				ret=1;
++			else
++				ret=0;
++		}
++	}
+ 
+ 	if (!strcmp(name, "raw_proto"))
+ 		ip->proto[IPPROTO_RAW / 32] |= (1 << (IPPROTO_RAW % 32));
+@@ -170,7 +185,9 @@
+ 	} else if (!strcmp(name, "udp")) {	// silly protocol 0
+ 		ip->proto[IPPROTO_IP / 32] |= (1 << (IPPROTO_IP % 32));
+ 		ip->proto[IPPROTO_UDP / 32] |= (1 << (IPPROTO_UDP % 32));
+-	} else if ((proto = getprotobyname(name)))
++	} else if (ret)
++		ip->proto[num_proto / 32] |=  (1 << (num_proto % 32));
++	else if ((proto = getprotobyname(name)))
+ 		ip->proto[proto->p_proto / 32] |= (1 << (proto->p_proto % 32));
+ 	else {
+ 		fprintf(stderr, "Invalid type/protocol: %s\n", name);
