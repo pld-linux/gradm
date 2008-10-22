@@ -5,10 +5,11 @@
 # Conditional build:
 %bcond_without	dist_kernel	# without kernel from distribution 
 %bcond_with	static		# build static version
+%bcond_with	debug		# build debug version
 #
 %define 	grsec_version	2.1.12
 %define		snap		200805181037
-%define		rel		1
+%define		rel		1.1
 Summary:	GrSecurity ACL Administration
 Summary(pl.UTF-8):	Administracja ACL GrSecurity
 Name:		gradm
@@ -22,6 +23,11 @@ Source0:	http://www.grsecurity.net/~spender/%{name}-%{version}-%{snap}.tar.gz
 Source1:	http://www.grsecurity.net/gracldoc.htm
 # Source1-md5:	010802958eaed78e4c370f4f5ce142b5
 Patch0:		%{name}-caps.patch
+Patch1:		%{name}-ignore-repos.patch
+Patch2:		%{name}-num-ugid.patch
+Patch3:		%{name}-cap_invert.patch
+Patch4:		%{name}-num-protocols.patch
+Patch5:		%{name}-show-trans.patch
 URL:		http://www.grsecurity.net/
 BuildRequires:	bison
 BuildRequires:	flex
@@ -46,6 +52,11 @@ Administracja ACL GrSecurity.
 %prep
 %setup -q -n %{name}2
 %patch0 -p1
+%patch1 -p1
+%patch2 -p1
+%patch3 -p1
+%patch4 -p1
+%patch5 -p1
 cp -f %{SOURCE1} .
 
 %build
@@ -53,7 +64,7 @@ cp -f %{SOURCE1} .
 %{__make} \
 	CC="%{__cc}" \
 	YACC=/usr/bin/bison \
-	OPT_FLAGS="%{rpmcflags}"
+	OPT_FLAGS="%{rpmcflags} %{?with_debug:-DGRADM_DEBUG}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
