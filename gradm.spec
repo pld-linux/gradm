@@ -8,8 +8,8 @@
 %bcond_with	debug		# build debug version
 #
 %define 	grsec_version	2.1.12
-%define		snap		200805181037
-%define		rel		1.1
+%define		snap		200812271437
+%define		rel		1
 Summary:	GrSecurity ACL Administration
 Summary(pl.UTF-8):	Administracja ACL GrSecurity
 Name:		gradm
@@ -19,7 +19,7 @@ License:	GPL
 Group:		Applications/System
 #Source0:	http://www.grsecurity.net/%{name}-%{version}-%{snap}.tar.gz
 Source0:	http://www.grsecurity.net/~spender/%{name}-%{version}-%{snap}.tar.gz
-# Source0-md5:	c6dd4b5d7e4ae9cc6010dfad5c9855c8
+# Source0-md5:	8bfe11dcc3fc8edcec43de8295957481
 Source1:	http://www.grsecurity.net/gracldoc.htm
 # Source1-md5:	010802958eaed78e4c370f4f5ce142b5
 Patch0:		%{name}-caps.patch
