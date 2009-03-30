@@ -7,8 +7,8 @@
 %bcond_with	static		# build static version
 %bcond_with	debug		# build debug version
 #
-%define 	grsec_version	2.1.13
-%define		snap		200902211224
+%define 	grsec_version	2.1.14
+%define		snap		200903281538
 %define		rel		1
 Summary:	GrSecurity ACL Administration
 Summary(pl.UTF-8):	Administracja ACL GrSecurity
@@ -19,15 +19,14 @@ License:	GPL
 Group:		Applications/System
 #Source0:	http://www.grsecurity.net/%{name}-%{version}-%{snap}.tar.gz
 Source0:	http://www.grsecurity.net/~spender/%{name}-%{version}-%{snap}.tar.gz
-# Source0-md5:	85941b95010349567c8840d6cb177dea
+# Source0-md5:	76f4773729b7b91e9a329eb2f3da4115
 Source1:	http://www.grsecurity.net/gracldoc.htm
 # Source1-md5:	010802958eaed78e4c370f4f5ce142b5
 Patch0:		%{name}-caps.patch
-Patch1:		%{name}-ignore-repos.patch
-Patch2:		%{name}-num-ugid.patch
-Patch3:		%{name}-cap_invert.patch
-Patch4:		%{name}-num-protocols.patch
-Patch5:		%{name}-show-trans.patch
+Patch1:		%{name}-num-ugid.patch
+Patch2:		%{name}-num-protocols.patch
+Patch3:		%{name}-show-trans.patch
+Patch4:		%{name}-symlink_depth.patch
 URL:		http://www.grsecurity.net/
 BuildRequires:	bison
 BuildRequires:	flex
@@ -38,7 +37,7 @@ BuildRequires:	sed > 4.0
 %endif
 BuildRequires:	pam-devel
 BuildRequires:	texinfo
-#%{?with_dist_kernel:Requires:	kernel(grsecurity) > 1.9.8}
+#{?with_dist_kernel:Requires:	kernel(grsecurity) = %{grsec_version}}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
@@ -56,7 +55,6 @@ Administracja ACL GrSecurity.
 %patch2 -p1
 %patch3 -p1
 %patch4 -p1
-%patch5 -p1
 cp -f %{SOURCE1} .
 
 %build
