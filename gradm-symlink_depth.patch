@@ -1,0 +1,48 @@
+diff -upr gradm2./gradm_defs.h gradm2/gradm_defs.h
+--- gradm2./gradm_defs.h	2009-02-25 16:38:51.413559473 +0000
++++ gradm2/gradm_defs.h	2009-02-25 17:06:58.624996368 +0000
+@@ -37,6 +37,7 @@
+ 
+ #define MAX_INCLUDE_DEPTH	20
+ #define MAX_NEST_DEPTH		8
++#define MAX_SYMLINK_DEPTH	8
+ 
+ #ifndef RLIMIT_LOCKS
+ #define RLIMIT_LOCKS 10
+diff -upr gradm2./gradm_parse.c gradm2/gradm_parse.c
+--- gradm2./gradm_parse.c	2009-02-25 16:38:51.417084282 +0000
++++ gradm2/gradm_parse.c	2009-02-25 17:14:40.444676181 +0000
+@@ -608,6 +608,7 @@
+ 	struct deleted_file *dfile;
+ 	unsigned int file_len;
+ 	char *str;
++	static int link_count = 0;
+ 
+ 	if (!subject) {
+ 		fprintf(stderr, "Error on line %lu of %s.  Attempt to "
+@@ -665,12 +666,20 @@ add_proc_object_acl(struct proc_acl *sub
+ 		fstat.st_ino = dfile->ino;
+ 		fstat.st_dev = 0;
+ 		mode |= GR_DELETED;
++		link_count = 0;
+ 	} else if (S_ISLNK(fstat.st_mode)) {
+-		char buf[PATH_MAX];
+-		memset(&buf, 0, sizeof (buf));
+-		realpath(filename, buf);
+-		if(!add_proc_object_acl(subject, gr_strdup(buf), mode, type | GR_SYMLINK))
+-			return 0;
++		if (link_count > MAX_SYMLINK_DEPTH) {
++			fprintf(stderr, "Too many levels of symbolic links "
++					"%s\n", filename);
++			exit(EXIT_FAILURE);
++		} else {
++			char buf[PATH_MAX];
++			memset(&buf, 0, sizeof (buf));
++			realpath(filename, buf);
++			link_count++;
++			if(!add_proc_object_acl(subject, gr_strdup(buf), mode, type | GR_SYMLINK))
++				return 0;
++		}
+ 	}
+ 
+ 	if ((p =
