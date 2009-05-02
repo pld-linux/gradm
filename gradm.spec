@@ -8,7 +8,7 @@
 %bcond_with	debug		# build debug version
 #
 %define 	grsec_version	2.1.14
-%define		snap		200904141815
+%define		snap		200904242018
 %define		rel		1
 Summary:	GrSecurity ACL Administration
 Summary(pl.UTF-8):	Administracja ACL GrSecurity
@@ -19,7 +19,7 @@ License:	GPL
 Group:		Applications/System
 #Source0:	http://www.grsecurity.net/%{name}-%{version}-%{snap}.tar.gz
 Source0:	http://www.grsecurity.net/~spender/%{name}-%{version}-%{snap}.tar.gz
-# Source0-md5:	76770d77b7ce43567062f5502e4e8ec3
+# Source0-md5:	190d451860e98c319cec8443ce9c4dfe
 Source1:	http://www.grsecurity.net/gracldoc.htm
 # Source1-md5:	010802958eaed78e4c370f4f5ce142b5
 Patch0:		%{name}-caps.patch
