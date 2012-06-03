@@ -33,7 +33,7 @@ BuildRequires:	flex
 %if %{with static}
 BuildRequires:	glibc-static
 BuildRequires:	pam-static
-BuildRequires:	sed > 4.0
+BuildRequires:	sed >= 4.0
 %endif
 BuildRequires:	pam-devel
 BuildRequires:	texinfo
