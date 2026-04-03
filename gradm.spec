@@ -9,7 +9,7 @@
 #
 %define 	grsec_version	2.2.0
 %define		snap		201009022049
-%define		rel		1
+%define		rel		2
 Summary:	GrSecurity ACL Administration
 Summary(pl.UTF-8):	Administracja ACL GrSecurity
 Name:		gradm
